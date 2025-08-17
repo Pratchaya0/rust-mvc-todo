@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if is_edit %}Edit Todo{% else %}New Todo{% endif %}</title>
+    <link href="/static/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>{% if is_edit %}Edit Todo{% else %}Create New Todo{% endif %}</h1>
+            <a href="/" class="btn btn-secondary">← Back to List</a>
+        </header>
+
+        <div class="form-container">
+            {% if is_edit %}
+                <form method="post" action="/todos/{{ todo.as_ref().unwrap().id }}">
+            {% else %}
+                <form method="post" action="/todos">
+            {% endif %}
+                <div class="form-group">
+                    <label for="title">Title *</label>
+                    <input 
+                        type="text" 
+                        id="title" 
+                        name="title" 
+                        value="{% if is_edit %}{{ todo.as_ref().unwrap().title }}{% endif %}"
+                        required
+                        placeholder="Enter todo title"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea 
+                        id="description" 
+                        name="description" 
+                        rows="4"
+                        placeholder="Enter optional description"
+                    >{% if is_edit %}{% if todo.as_ref().unwrap().description.is_some() %}{{ todo.as_ref().unwrap().description.as_ref().unwrap() }}{% endif %}{% endif %}</textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        {% if is_edit %}Update Todo{% else %}Create Todo{% endif %}
+                    </button>
+                    <a href="/" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
